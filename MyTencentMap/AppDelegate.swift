@@ -8,15 +8,44 @@
 
 import UIKit
 
+let SCREENSIZE = UIScreen.main.bounds.size
+
+
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate ,QAppKeyCheckDelegate{
 
     var window: UIWindow?
 
+    var keyCheck: QAppKeyCheck?
+    
+    let key = "2UQBZ-PHGRF-PWKJY-J653Y-TRGXF-CLBR5"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        self.window?.backgroundColor = UIColor(red: 246/255.0, green: 93/255.0, blue: 34/255.0, alpha: 1)
+        
+        self.keyCheck = QAppKeyCheck()
+        self.keyCheck?.start(self.key, with: self)
+        
+        QMSSearchServices.shared().apiKey = key
+        
+        
+        let rootVC = RootViewController()
+        
+        let nvc = UINavigationController(rootViewController: rootVC)
+        
+        self.window?.rootViewController = nvc
+   
         return true
+    }
+    
+    func notifyAppKeyCheckResult(_ errCode: QErrorCode) {
+        if errCode == QErrorNone {
+            print("验证成功")
+        }else{
+            print("验证失败")
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
